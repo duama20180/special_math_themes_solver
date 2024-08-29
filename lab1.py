@@ -37,12 +37,14 @@ def hordaMethod (expr, a, b, eps):
     ans = round(point, precision)
     accuracy = errorRate (expr, point, eps)
 
-    return f"{ans}\n{accuracy}"
+    return f"\n{ans}\n{accuracy}\n"
 
 
 def errorRateNewtonMethod(expr, newPoint, eps):
     deritave1 = sp.diff(expr, x)
     deritave2 = sp.diff(newPoint, x, 2)
+
+    deritave_from_division = deritave1 / (deritave2)
 
     if abs(expr.subs(x, newPoint) / deritave1.subs(x, newPoint)) < eps:
         return "Точність відповідає вимогам"
@@ -79,7 +81,7 @@ def newtonMethod(expr, a, b, eps):
 
     ans = round(point, precision)
     accuracy = errorRateNewtonMethod (expr, point, eps)
-    return f"{ans}\n{accuracy}"
+    return f"\n{ans}\n{accuracy}\n"
 
 
 def combinedMethod (expr, a, b):
@@ -105,9 +107,38 @@ def combinedMethod (expr, a, b):
         if ( round(newPointHord, precision ) == round( newPointNewton, precision ) ):
             return ( round(newPointHord, precision ) )
 
+def errorRateIterationMethod(expr, newPoint, eps):
+    return 1
 
 def iterationMethod (expr, a, b, eps):
-    return 1
+
+    exprNew = x - (expr / sp.diff(expr, x))
+    point = a
+
+    exprDer = sp.asin(x ** 2 / 10)
+    if abs(exprDer.subs(x,a)) < 1:
+        lPoint = a
+    elif abs(exprDer.subs(x,b)) < 1:
+        lPoint = b
+
+    previousPoint = None
+
+    newPoint = None
+
+    for i in range (100):
+
+        newPoint = exprNew.subs(x,point)
+        print(newPoint)
+        if previousPoint is not None and abs(newPoint - previousPoint) <= eps:
+            break
+        else:
+            previousPoint = point
+            point = newPoint
+
+    ans = round(point, precision)
+    accuracy = errorRateNewtonMethod(expr, point, eps)
+
+    return f"\n{ans}\n{accuracy}"
 
 precision = 4
 eps = 10 ** (-precision)
@@ -121,13 +152,15 @@ b = float( 2.5 )
 # a = float( -2 )
 # b = float( -1 )
 
-#print ( "Метод хорд:" )
-#print ( hordaMethod(expr, a, b, eps) )
-print()
+print ( "Метод хорд:" )
+print ( hordaMethod(expr, a, b, eps) )
 
-# print ( "Метод дотичних:" )
-# print ( newtonMethod(expr, a, b, eps) )
-print()
+print ( "Метод дотичних:" )
+print ( newtonMethod(expr, a, b, eps) )
 
 print ( "Комбінований метод:" )
 print ( combinedMethod(expr, a, b) )
+print()
+
+print( "Ітераційний метод:" )
+print( iterationMethod(expr, a, b, eps,) )
