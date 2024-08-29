@@ -1,5 +1,20 @@
 import sympy as sp
 
+def getUserInput():
+    precision = int(input("Введіть точність обчислень (кількість знаків після коми): "))
+    eps = 10 ** (-precision)
+
+    expr_input = input("Введіть вираз для розв'язання (наприклад, 'x**2 - 10 * sin(x)'): ")
+    x = sp.Symbol('x')
+    expr = sp.sympify(expr_input)
+
+    a = float(input("Введіть початкову точку a: "))
+    b = float(input("Введіть початкову точку b: "))
+
+    print()
+
+    return precision, eps, a, b, expr
+
 def checkIfValidRootExists (expr, a, b ):
     return expr.subs(x,a) * expr.subs(x,b) < 0
 
@@ -19,7 +34,7 @@ def errorRate (expr, newPoint, eps):
 
 def hordaMethod (expr, a, b, eps):
     if not checkIfValidRootExists(expr, a, b):
-        return "Необхідно змінити проміжок"
+        return f"Необхідно змінити проміжок \n"
 
     point, notPoint = findMoveablePoint (expr, a, b)
     previousPoint = None
@@ -62,7 +77,7 @@ def findMoveablePoint2 (expr, a, b):
 def newtonMethod(expr, a, b, eps):
 
     if not checkIfValidRootExists(expr, a, b):
-        return "Необхідно змінити проміжок"
+        return f"Необхідно змінити проміжок \n"
 
     deritave1 = sp.diff(expr, x)
 
@@ -87,7 +102,7 @@ def newtonMethod(expr, a, b, eps):
 def combinedMethod (expr, a, b):
 
     if not checkIfValidRootExists(expr, a, b):
-        return "Необхідно змінити проміжок"
+        return f"Необхідно змінити проміжок \n"
 
     pointHord, pointNewton = findMoveablePoint2 (expr, a, b)
 
@@ -105,45 +120,50 @@ def combinedMethod (expr, a, b):
         print()
 
         if ( round(newPointHord, precision ) == round( newPointNewton, precision ) ):
-            return ( round(newPointHord, precision ) )
+            return  f"{round(newPointHord, precision )}\n{"Точність відповідає вимогам"} "
 
 def errorRateIterationMethod(expr, newPoint, eps):
     return 1
 
 def iterationMethod (expr, a, b, eps):
 
-    exprNew = x - (expr / sp.diff(expr, x))
-    point = a
+    if expr != x**2 - 10 * sp.sin(x):
+        return newtonMethod(expr, a, b, eps)
+    else:
+        exprNew = x - (expr / sp.diff(expr, x))
+        point = a
 
-    exprDer = sp.asin(x ** 2 / 10)
-    if abs(exprDer.subs(x,a)) < 1:
-        lPoint = a
-    elif abs(exprDer.subs(x,b)) < 1:
-        lPoint = b
+        exprDer = sp.asin(x ** 2 / 10)
+        if abs(exprDer.subs(x, a)) < 1:
+            lPoint = a
+        elif abs(exprDer.subs(x, b)) < 1:
+            lPoint = b
 
-    previousPoint = None
+        previousPoint = None
 
-    newPoint = None
+        newPoint = None
 
-    for i in range (100):
+        for i in range(100):
 
-        newPoint = exprNew.subs(x,point)
-        print(newPoint)
-        if previousPoint is not None and abs(newPoint - previousPoint) <= eps:
-            break
-        else:
-            previousPoint = point
-            point = newPoint
+            newPoint = exprNew.subs(x, point)
+            print(newPoint)
+            if previousPoint is not None and abs(newPoint - previousPoint) <= eps:
+                break
+            else:
+                previousPoint = point
+                point = newPoint
 
-    ans = round(point, precision)
-    accuracy = errorRateNewtonMethod(expr, point, eps)
+        ans = round(point, precision)
+        accuracy = errorRateNewtonMethod(expr, point, eps)
+        return f"\n{ans}\n{accuracy}"
 
-    return f"\n{ans}\n{accuracy}"
+
+# precision, eps, a, b, expr = getUserInput()
+
+x = sp.Symbol('x')
 
 precision = 4
 eps = 10 ** (-precision)
-x = sp.Symbol('x')
-
 expr = x**2 - 10 * sp.sin(x)
 a = float( 2.4 )
 b = float( 2.5 )
