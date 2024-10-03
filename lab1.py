@@ -143,10 +143,16 @@ def iterationMethod (expr, a, b, eps):
 
         newPoint = None
 
-        for i in range(100):
+        for i in range(10):
 
             newPoint = exprNew.subs(x, point)
+
+            if newPoint >= b or newPoint <= a:
+                return "Необхідно змінити проміжок"
+                
+
             print(newPoint)
+
             if previousPoint is not None and abs(newPoint - previousPoint) <= eps:
                 break
             else:
@@ -155,7 +161,10 @@ def iterationMethod (expr, a, b, eps):
 
         ans = round(point, precision)
         accuracy = errorRateNewtonMethod(expr, point, eps)
-        return f"\n{ans}\n{accuracy}"
+        if ans==0.0 and a>0 and b>0:
+            return "Необхідно змінити проміжок"
+        else:
+            return f"\n{ans}\n{accuracy}"
 
 
 # precision, eps, a, b, expr = getUserInput()
@@ -168,9 +177,6 @@ expr = x**2 - 10 * sp.sin(x)
 a = float( 2.4 )
 b = float( 2.5 )
 
-# expr = x**2 + 4 * sp.sin(x)
-# a = float( -2 )
-# b = float( -1 )
 
 print ( "Метод хорд:" )
 print ( hordaMethod(expr, a, b, eps) )
