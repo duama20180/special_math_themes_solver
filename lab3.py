@@ -51,16 +51,16 @@ def adams_method(a, b, h, y0, x_rk, y_rk):
     y_values = list(y_rk)
 
     for i in range(4, n+1):
-        q3 = round( h * f(x_rk[i-1], y_rk[i-1]) , 5)
-        q2 = round( h * f(x_values[i-2], y_values[i-2]),5)
-        q1 = round( h * f(x_values[i-3], y_values[i-3]),5)
-        q0 = round( h * f(x_values[i-4], y_values[i-4]),5)
+        q3 =  h * f(x_rk[i-1], y_rk[i-1])
+        q2 =  h * f(x_values[i-2], y_values[i-2])
+        q1 =  h * f(x_values[i-3], y_values[i-3])
+        q0 = h * f(x_values[i-4], y_values[i-4])
 
-        delta_q0 =  round( q1-q0,5)
-        delta_q1 = round( q2-q1, 5)
-        delta_q2 = round( q3-q2, 5)
+        delta_q0 = q1-q0
+        delta_q1 = q2-q1
+        delta_q2 = q3-q2
 
-        y_values[i] =round(  y_values[i-1] + q3+ delta_q2 * 0.5 + delta_q1**2 * 5 / 12 + delta_q0**3 * 3 / 8, 5)
+        y_values[i] = y_values[i-1] + q3+ delta_q2 * 0.5 + delta_q1**2 * 5 / 12 + delta_q0**3 * 3 / 8
         # print(f"iteration{i}")
         # print(f"\nq0= {q0} {h,x_values[i-4], round( y_values[i-4],5) } \nq1= {q1} { h,x_values[i-3], round( y_values[i-3],5)}"
         #       f"\nq2= {q2} { h,x_values[i-2], round( y_values[i-2],5)} \nq3= {q3} { h,x_values[i-1],round( y_values[i-1],5)}\ndelta_q0= {delta_q0}"
@@ -70,7 +70,6 @@ def adams_method(a, b, h, y0, x_rk, y_rk):
         # y_values [i] = y_values[i-1] + (h * ( ( y_values[i-1]*55 + y_values[i-2]*59  + y_values[i-3]*37 - y_values[i-4]*9) /24 ))
 
     return np.array(x_values), np.array(y_values)
-
 
 def picard_method(a, b, h, y0, f):
     n = int((b - a) / h)
@@ -89,7 +88,7 @@ def picard_method(a, b, h, y0, f):
 def print_points(x, y, method_name):
     print(f"{method_name}:")
     for xi, yi in zip(x, y):
-        print(f"{xi:.5f}, {yi:.5f}")
+        print(f"{xi:.3f}, {yi:}")
     print()
 
 
