@@ -57,9 +57,6 @@ def hordaMethod (expr, a, b, eps):
 
 def errorRateNewtonMethod(expr, newPoint, eps):
     deritave1 = sp.diff(expr, x)
-    deritave2 = sp.diff(newPoint, x, 2)
-
-    deritave_from_division = deritave1 / (deritave2)
 
     if abs(expr.subs(x, newPoint) / deritave1.subs(x, newPoint)) < eps:
         return "Точність відповідає вимогам"

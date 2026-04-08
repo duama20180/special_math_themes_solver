@@ -51,16 +51,19 @@ def adams_method(a, b, h, y0, x_rk, y_rk):
     y_values = list(y_rk)
 
     for i in range(4, n+1):
-        q3 =  h * f(x_rk[i-1], y_rk[i-1])
-        q2 =  h * f(x_values[i-2], y_values[i-2])
-        q1 =  h * f(x_values[i-3], y_values[i-3])
+        q3 = h * f(x_values[i-1], y_values[i-1])
+        q2 = h * f(x_values[i-2], y_values[i-2])
+        q1 = h * f(x_values[i-3], y_values[i-3])
         q0 = h * f(x_values[i-4], y_values[i-4])
 
-        delta_q0 = q1-q0
-        delta_q1 = q2-q1
-        delta_q2 = q3-q2
+        delta_q0 = q1 - q0
+        delta_q1 = q2 - q1
+        delta_q2 = q3 - q2
 
-        y_values[i] = y_values[i-1] + q3+ delta_q2 * 0.5 + delta_q1**2 * 5 / 12 + delta_q0**3 * 3 / 8
+        delta2_q = delta_q2 - delta_q1
+        delta3_q = delta_q2 - 2 * delta_q1 + delta_q0
+
+        y_values[i] = y_values[i-1] + q3 + delta_q2 * 0.5 + delta2_q * 5 / 12 + delta3_q * 3 / 8
         # print(f"iteration{i}")
         # print(f"\nq0= {q0} {h,x_values[i-4], round( y_values[i-4],5) } \nq1= {q1} { h,x_values[i-3], round( y_values[i-3],5)}"
         #       f"\nq2= {q2} { h,x_values[i-2], round( y_values[i-2],5)} \nq3= {q3} { h,x_values[i-1],round( y_values[i-1],5)}\ndelta_q0= {delta_q0}"
